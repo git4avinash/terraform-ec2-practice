@@ -31,3 +31,5 @@ resource "aws_security_group" "allow_ssh" {
     Name = "Allow SSH"
   }
 }
+
+# This is for fetch demo
