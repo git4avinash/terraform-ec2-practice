@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Terraform Plan') {
             steps {
-                withAWS(credentials: '', region: "${AWS_REGION}") {
+                withAWS(credentials: 'for jenkins', region: "${AWS_REGION}") {
                     sh 'terraform plan'
                 }
             }
