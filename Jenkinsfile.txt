@@ -1,27 +1,28 @@
 pipeline {
     agent any
-
+    environment {
+        AWS_REGION = "ap-south-1"
+    }
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    credentialsId: 'YOUR-CREDENTIALS-ID',
-                    url: 'https://github.com/git4avinash/terraform-vpc.git'
-            }
-        }
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
-            }
-        }
-        stage('Terraform Validate') {
-            steps {
-                sh 'terraform validate'
+                withAWS(credentials: 'for jenkins', region: "${AWS_REGION}") {
+                    sh 'terraform init'
+                }
             }
         }
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan'
+                withAWS(credentials: '', region: "${AWS_REGION}") {
+                    sh 'terraform plan'
+                }
+            }
+        }
+        stage('Terraform Apply') {
+            steps {
+                withAWS(credentials: 'for jenkins', region: "${AWS_REGION}") {
+                    sh 'terraform apply -auto-approve'
+                }
             }
         }
     }
